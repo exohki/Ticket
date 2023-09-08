@@ -8,7 +8,7 @@ class Program
     {
         string filePath = "new_tickets.csv";
 
-        // Check if the file exists, and create the header if it doesn't
+        // Create the header if the file doesn't exist
         if (!File.Exists(filePath))
         {
             CreateHeader(filePath);
@@ -41,7 +41,7 @@ class Program
         string[] newTicket = { ticketID, summary, status, priority, submitter, assigned, watchingNames };
         data.Add(newTicket);
 
-        // Write the updated data to the file
+        // Write the updated data to the file, overwriting the existing content
         WriteDataToFile(filePath, data);
 
         Console.WriteLine("Data written to the file.");
@@ -54,6 +54,9 @@ class Program
         {
             using (StreamReader reader = new StreamReader(filePath))
             {
+                // Skip the header line
+                reader.ReadLine();
+
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
@@ -75,6 +78,9 @@ class Program
         {
             using (StreamWriter writer = new StreamWriter(filePath))
             {
+                // Write the header
+                writer.WriteLine("TicketID,Summary,Status,Priority,Submitter,Assigned,Watching");
+
                 foreach (string[] row in data)
                 {
                     writer.WriteLine(string.Join(",", row));
@@ -122,3 +128,4 @@ class Program
         return watchingNames;
     }
 }
+
